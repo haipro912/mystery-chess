@@ -1,0 +1,27 @@
+Remain Bug - Feature list:
+- Disable, enable when disconnect
+- Show message when disconnect
+- Show signal when time is going to be off
+- Has a signal indicates that which team is in turn
+- Send detect message each period of time (say 30'')
+- Auto reconnect
+- Remove moving piece by drag  & drop
+- Support save game
+- Only allow move when 2 players are ready
+- Ko cho di quan de dua tuong cua minh vao check mate
+- Test checkmate
+- Timers - have problem if 'won' message shown and 1 play
+    create new game while the other has not close this msg dialog
+- Complete log & log to file
+- Redesign using MVC and improve Listener mechanism
+- Mult-thread aware
+- Add game over attr to match. prevent gameover twice
+- Ensure the application stopped in all error cases
+- Support undo
+- Sometimes hang
+- Have a good exception handling system --> show proper message
+-- Refactor listener --> support message, error...
+
+- Load/save
+- Refactor move/dataChanged Listeners
+- 

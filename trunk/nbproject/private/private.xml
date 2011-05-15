@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/D:/bhtin/project/java/MysteryChess/src/mysterychess/view/ChessPanel.java</file>
+        <file>file:/D:/bhtin/project/java/MysteryChess/src/mysterychess/model/Match.java</file>
+        <file>file:/D:/bhtin/project/java/MysteryChess/src/mysterychess/model/ModelActionListener.java</file>
+        <file>file:/D:/bhtin/project/java/MysteryChess/src/mysterychess/view/ChessTable.java</file>
+        <file>file:/D:/bhtin/project/java/MysteryChess/src/mysterychess/network/AbstractHost.java</file>
+        <file>file:/D:/bhtin/project/java/MysteryChess/src/mysterychess/network/CommonRemote.java</file>
+        <file>file:/D:/bhtin/project/java/MysteryChess/src/mysterychess/network/ClientCallback.java</file>
+        <file>file:/D:/bhtin/project/java/MysteryChess/src/mysterychess/network/RemoteServer.java</file>
+        <file>file:/D:/bhtin/project/java/MysteryChess/src/mysterychess/network/RmiClient.java</file>
+        <file>file:/D:/bhtin/project/java/MysteryChess/src/mysterychess/view/NewGamePanel.java</file>
+        <file>file:/D:/bhtin/project/java/MysteryChess/src/mysterychess/view/StartupFrame.java</file>
+    </open-files>
+</project-private>
