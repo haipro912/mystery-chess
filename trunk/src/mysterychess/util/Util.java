@@ -18,7 +18,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import mysterychess.model.Advisor;
 import mysterychess.model.Cannon;
@@ -41,7 +40,7 @@ import mysterychess.model.Team;
  */
 public class Util {
 
-    private final static String VERSION = "1.9.0";
+    private final static String VERSION = "1.9.1";
     private static final String AUTHOR = "Tin Bui-Huy";
     private static final String GRAPHICS_DESIGNER = "Huy Khong-Minh";
     public final static String RMI_SERVER_NAME = "MysteryChessServer";
@@ -80,12 +79,11 @@ public class Util {
         /** Is used to log server related information */
         Logger logger = Logger.getLogger("");
         try {
-
-            logger.setLevel(Level.ALL);
             String baseDir = System.getProperty("user.dir");
             fileHandler = new FileHandler(baseDir + File.separator + LOG_FILE_NAME);
             fileHandler.setFormatter(new SimpleFormatter());
             logger.addHandler(fileHandler);
+            logger.addHandler(consoleHandler);
             logger.setUseParentHandlers(false);
 
         } catch (Exception ex) {
