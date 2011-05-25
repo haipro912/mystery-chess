@@ -67,7 +67,14 @@ public class ChessTimer {
     }
 
     public String toString() {
-        return formatTime(getGameTimeLeft()) + "        "
-                + formatTime(getPieceMoveTimeLeft());
+        long g =  getGameTimeLeft();
+        if (g < 0) {
+            g = 0;
+        }
+        long p =  getPieceMoveTimeLeft();
+        if (p < 0) {
+            p = 0;
+        }
+        return formatTime(g) + "        " + formatTime(p);
     }
 }

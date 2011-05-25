@@ -201,16 +201,30 @@ public class ChessPanel extends JPanel {
         return null;
     }
 
+    /**
+     * Time of the given team is over.
+     */
+    protected void timeOver(Team team) {
+        Team myTeam = match.getTeam(Team.TeamPosition.BOTTOM);
+        if (team.equals(myTeam)) {
+            Team wonTeam = match.getTeam(Team.TeamPosition.TOP);
+            String msg = "Time is over. "
+                    + wonTeam.getColor().getDisplayName()
+                    + " team has won the game!";
+            match.gameOver(msg, true);
+        }
+    }
+
     private class TimerPanel extends JPanel implements Runnable {
 
         private JLabel timeLabel = new JLabel();
         private ChessTimer timer = new ChessTimer();
-        private Team myTeam;
+        private Team team;
         private Match match;
         private boolean gameStopped = false;
 
-        public TimerPanel(Match match, Team myTeam) {
-            this.myTeam = myTeam;
+        public TimerPanel(Match match, Team team) {
+            this.team = team;
             this.match = match;
             setLayout(new FlowLayout(FlowLayout.RIGHT));
             add(timeLabel);
@@ -224,18 +238,18 @@ public class ChessPanel extends JPanel {
                                 timer.startGame();
                             }
                             Piece p = (Piece) e.getSource();
-                            if (p.getTeam() != TimerPanel.this.myTeam) {
+                            if (p.getTeam() != TimerPanel.this.team) {
                                 timer.startMovePiece();
                             } else {
                                 timer.stopMovePiece();
                             }
                         } else {
-                        if (e.getSource() instanceof Match) {
-                            // New game created
-                            TimerPanel.this.myTeam = TimerPanel.this.match.getTeam(TimerPanel.this.myTeam.getPosition());
-                            timer.reset();
-                            gameStopped = false;
-                        }
+                            if (e.getSource() instanceof Match) {
+                                // New game created
+                                TimerPanel.this.team = TimerPanel.this.match.getTeam(TimerPanel.this.team.getPosition());
+                                timer.reset();
+                                gameStopped = false;
+                            }
                         }
                     }
                 }
@@ -280,11 +294,7 @@ public class ChessPanel extends JPanel {
 
                         if (timer.getPieceMoveTimeLeft() <= 0
                                 || timer.getGameTimeLeft() <= 0) {
-                            Team wonTeam = match.getOtherTeam(myTeam);
-                            String msg = "Time is over. " 
-                                    + wonTeam.getColor().getDisplayName()
-                                    + " team has won the game!";
-                            match.gameOverred(msg);
+                            timeOver(team);
                         }
                     }
                     // Update GUI after every 1 second

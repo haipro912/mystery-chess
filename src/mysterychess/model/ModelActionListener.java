@@ -23,4 +23,6 @@ public interface ModelActionListener {
     public void shutdownRequested();
 
     public void resigned();
+
+    public void gameOver(String msg);
 }
