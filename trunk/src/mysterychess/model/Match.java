@@ -416,12 +416,12 @@ public class Match {
         }
     }
 
-    public void error(String msg) {
-        ActionEvent e = new ActionEvent(msg, 1, "Error");
-        for (ActionListener l : messageListeners) {
-            l.actionPerformed(e);
-        }
-    }
+//    public void error(String msg) {
+//        ActionEvent e = new ActionEvent(msg, 1, "Error");
+//        for (ActionListener l : messageListeners) {
+//            l.actionPerformed(e);
+//        }
+//    }
 
     public void receivedMessage(String msg) {
         for (RemoteActionListener l : remoteActionListeners) {
@@ -441,9 +441,14 @@ public class Match {
         }
     }
 
-    public void gameOverred(String msg) {
-//        sendMessage(msg);
-//        checkmated(wonTeam);
+    public void gameOver(String msg, boolean requestFromView) {
+        setEnabled(false);
+        if (requestFromView) {
+            for (ModelActionListener l : modelActionListeners) {
+                l.gameOver(msg);
+            }
+        }
+        
         stop(msg);
     }
 

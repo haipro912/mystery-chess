@@ -19,4 +19,6 @@ public interface CommonRemote extends Remote {
     public void chat(String msg) throws RemoteException;
 
     public void resigned() throws RemoteException;
+
+    public void gameOver(String msg) throws RemoteException;
 }

@@ -40,7 +40,7 @@ import mysterychess.model.Team;
  */
 public class Util {
 
-    private final static String VERSION = "1.9.1";
+    private final static String VERSION = "1.9.2";
     private static final String AUTHOR = "Tin Bui-Huy";
     private static final String GRAPHICS_DESIGNER = "Huy Khong-Minh";
     public final static String RMI_SERVER_NAME = "MysteryChessServer";
@@ -155,6 +155,8 @@ public class Util {
         return loadImage("icon.png");
     }
 
+ 
+
     private Util() {
     }
 
@@ -201,19 +203,23 @@ public class Util {
         source.add(new Soldier());
         source.add(new Soldier());
         source.add(new Soldier());
-        Collections.shuffle(source, new Random(System.nanoTime()));
-        return source;
-//        List<Role> generated = new ArrayList<Role>();
-////        Random r = new Random(System.nanoTime());
-//        do {
-////            int index = r.nextInt(source.size());
-//            int index = (int) (System.nanoTime() % source.size());
-//            generated.add(source.remove(index));
-////            r.setSeed(index);
-//        } while (source.size() > 1);
-//        generated.add(source.remove(0));
-//        return generated;
-
+        
+        // Shuffle twice for sure
+        List<Role> result = shuffle(source);
+        return shuffle(result);
+    }
+    
+       private static <T> List<T> shuffle(List<T> list) {
+        Collections.shuffle(list, new Random(System.nanoTime()));
+        List<T> result = new ArrayList<T>();
+        do {
+            int index = (int) (System.nanoTime() % list.size());
+            result.add(list.remove(index));
+        } while (list.size() > 1);
+        result.add(list.remove(0));
+        
+        Collections.shuffle(result, new Random(System.nanoTime()));
+        return result;
     }
 
     public static Team createMysteryTopTeam(Match match) {

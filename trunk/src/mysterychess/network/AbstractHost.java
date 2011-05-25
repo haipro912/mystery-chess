@@ -82,7 +82,13 @@ public abstract class AbstractHost implements CommonRemote {
                 Task t = new Task() {
 
                     public void perform() throws Exception {
-                        getOtherSide().pieceMoved(data);
+                        try {
+                            getOtherSide().pieceMoved(data);
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(AbstractHost.class.getName()).log(Level.SEVERE,
+                            ex.getMessage(), ex);
+                            AbstractHost.this.match.receivedError("Connection refused. Guest may resigned.");
+                        }
                     }
                 };
                 Util.execute(t);
@@ -101,7 +107,8 @@ public abstract class AbstractHost implements CommonRemote {
                     loadTable(t);
                 } catch (RemoteException ex) {
                     Logger.getLogger(AbstractHost.class.getName()).log(Level.SEVERE,
-                            "Fail to load game", ex);
+                            ex.getMessage(), ex);
+                    AbstractHost.this.match.receivedError(ex.getCause().getMessage());
                 }
             }
 
@@ -110,7 +117,17 @@ public abstract class AbstractHost implements CommonRemote {
                     getOtherSide().resigned();
                 } catch (RemoteException ex) {
                     Logger.getLogger(AbstractHost.class.getName()).log(Level.SEVERE,
-                            "Fail to load game", ex);
+                            ex.getMessage(), ex);
+                }
+            }
+
+            public void gameOver(String msg) {
+                try {
+                getOtherSide().gameOver(msg);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(AbstractHost.class.getName()).log(Level.SEVERE,
+                            ex.getMessage(), ex);
+                    AbstractHost.this.match.receivedError(ex.getCause().getMessage());
                 }
             }
         });
@@ -201,6 +218,15 @@ public abstract class AbstractHost implements CommonRemote {
      */
     public void resigned() throws RemoteException {
         match.resign(false);
+    }
+    
+        /**
+     * This method is called remotely.
+     *
+     * @throws RemoteException
+     */
+    public void gameOver(String msg) throws RemoteException {
+        match.gameOver(msg, false);
     }
 
 //    /**
