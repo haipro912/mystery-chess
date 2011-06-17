@@ -14,7 +14,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import mysterychess.model.Match;
 import mysterychess.model.Piece;
-import mysterychess.model.Team;
 import mysterychess.model.Team.TeamPosition;
 import mysterychess.util.Util;
 
@@ -25,7 +24,8 @@ import mysterychess.util.Util;
  */
 public class ChessTable extends JPanel {
 
-    private int margin = 0;
+    private int xMargin = 0;
+    private int yMargin = 0;
     private float unit = 0;
     private Match match;
     private Piece selectedPiece;
@@ -175,7 +175,9 @@ public class ChessTable extends JPanel {
         float unit1 = (getWidth() - 2 * STATIC_MARGIN) / (Util.MAX_X + 1);
         float unit2 = (getHeight() - 2 * STATIC_MARGIN) / (Util.MAX_Y + 1);
         unit = (unit1 < unit2 ? unit1 : unit2);
-        margin = (int) (unit / 2 + STATIC_MARGIN);
+        
+        xMargin = (int)(getWidth() - unit*(Util.MAX_X))/2;
+        yMargin = (int)(getHeight() - unit * (Util.MAX_Y))/2;
     }
 
     private void drawTable(Graphics g) {
@@ -187,11 +189,12 @@ public class ChessTable extends JPanel {
 
     private void drawBorder(Graphics g) {
         int delta = 2;
-        int m = margin - delta;
+        int xm = xMargin - delta;
+        int ym = yMargin - delta;
         int width = Math.round(Util.MAX_X * unit) + delta * 2;
         int heigth = Math.round(Util.MAX_Y * unit) + delta * 2;
         for (int i = 0; i < 3; i++) {
-            g.drawRect(m - i, m - i,
+            g.drawRect(xm - i, ym - i,
                     width + i * 2,
                     heigth + i * 2);
         }
@@ -200,23 +203,23 @@ public class ChessTable extends JPanel {
     private void drawCells(Graphics g) {
         // Rows
         for (int i = 0; i <= Util.MAX_Y; i++) {
-            g.drawLine(margin,
-                    Math.round(margin + i * unit),
-                    Math.round(margin + Util.MAX_X * unit),
-                    Math.round(margin + i * unit));
+            g.drawLine(xMargin,
+                    Math.round(yMargin + i * unit),
+                    Math.round(xMargin + Util.MAX_X * unit),
+                    Math.round(yMargin + i * unit));
         }
 
         // Columns
         for (int i = 0; i <= Util.MAX_X; i++) {
-            g.drawLine(Math.round(margin + i * unit),
-                    margin,
-                    Math.round(margin + i * unit),
-                    Math.round(margin + 4 * unit));
+            g.drawLine(Math.round(xMargin + i * unit),
+                    yMargin,
+                    Math.round(xMargin + i * unit),
+                    Math.round(yMargin + 4 * unit));
 
-            g.drawLine(Math.round(margin + i * unit),
-                    Math.round(margin + 5 * unit),
-                    Math.round(margin + i * unit),
-                    Math.round(margin + Util.MAX_Y * unit));
+            g.drawLine(Math.round(xMargin + i * unit),
+                    Math.round(yMargin + 5 * unit),
+                    Math.round(xMargin + i * unit),
+                    Math.round(yMargin + Util.MAX_Y * unit));
         }
 
     }
@@ -251,8 +254,8 @@ public class ChessTable extends JPanel {
     private void drawMark(Graphics g, int x, int y) {
         int delta = 3;
 
-        g.drawRect(Math.round(x * unit - delta) + margin,
-                Math.round(y * unit - delta) + margin,
+        g.drawRect(Math.round(x * unit - delta) + xMargin,
+                Math.round(y * unit - delta) + yMargin,
                 2 * delta, 2 * delta);
     }
 
@@ -271,10 +274,10 @@ public class ChessTable extends JPanel {
     }
 
     private void drawLine(Graphics g, int x1, int y1, int x2, int y2) {
-        g.drawLine(Math.round(x1 * unit + margin),
-                Math.round(y1 * unit + margin),
-                Math.round(x2 * unit + margin),
-                Math.round(y2 * unit + margin));
+        g.drawLine(Math.round(x1 * unit + xMargin),
+                Math.round(y1 * unit + yMargin),
+                Math.round(x2 * unit + xMargin),
+                Math.round(y2 * unit + yMargin));
     }
 
     private void drawPieces(Graphics g) {
@@ -331,10 +334,10 @@ public class ChessTable extends JPanel {
     }
 
     public Point toScreenCoordinate(Point p) {
-        return new Point(Math.round(p.x * unit) + margin, Math.round(p.y * unit) + margin);
+        return new Point(Math.round(p.x * unit) + xMargin, Math.round(p.y * unit) + yMargin);
     }
 
     public Point toChessTableCoordinate(Point p) {
-        return new Point(Math.round((p.x - margin) / unit), Math.round((p.y - margin) / unit));
+        return new Point(Math.round((p.x - xMargin) / unit), Math.round((p.y - yMargin) / unit));
     }
 }

@@ -4,11 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -29,7 +32,7 @@ import mysterychess.util.Util;
  */
 public class ChessPanel extends JPanel {
 
-    private final static int CHESS_TABLE_MARGIN = 3;
+//    private final static int CHESS_TABLE_MARGIN = 3;
     private final static int VERTICAL_PANEL_WIDTH = 40;
     private final static int HORIZONTAL_PANEL_HEIGHT = 30;
     private Match match;
@@ -222,13 +225,17 @@ public class ChessPanel extends JPanel {
         private Team team;
         private Match match;
         private boolean gameStopped = false;
+        private boolean warned = false;
+        private JLabel warnLabel = new JLabel(
+                new ImageIcon(Util.loadImage("alarm.gif").getScaledInstance(30, 30, Image.SCALE_DEFAULT)));
 
         public TimerPanel(Match match, Team team) {
             this.team = team;
             this.match = match;
             setLayout(new FlowLayout(FlowLayout.RIGHT));
+            warnLabel.setVisible(false);
+            add(warnLabel);
             add(timeLabel);
-
             match.addDataChangedListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -249,6 +256,7 @@ public class ChessPanel extends JPanel {
                                 TimerPanel.this.team = TimerPanel.this.match.getTeam(TimerPanel.this.team.getPosition());
                                 timer.reset();
                                 gameStopped = false;
+                                warned = false;
                             }
                         }
                     }
@@ -258,6 +266,7 @@ public class ChessPanel extends JPanel {
 
                 public void actionPerformed(ActionEvent e) {
                     gameStopped = true;
+                    warned = false;
                 }
             });
 
@@ -273,8 +282,27 @@ public class ChessPanel extends JPanel {
 
                 public void shutdownRequested() {
                     gameStopped = true;
+                    warned = false;
                 }
             });
+        }
+
+        private void warn() {
+            if (!warned) {
+                Thread t = new Thread() {
+                    public void run() {
+                        try {
+                            warnLabel.setVisible(true);
+                            sleep(3000);
+                            warnLabel.setVisible(false);
+                        } catch (InterruptedException ex) {
+                            
+                        }
+                    }
+                };
+                t.start();
+                warned = true;
+            }
         }
 
         public void run() {
@@ -290,10 +318,13 @@ public class ChessPanel extends JPanel {
                         if (timer.getPieceMoveTimeLeft() < 15 * 1000 // 15 seconds
                                 || timer.getGameTimeLeft() < 2 * 60 * 1000) { // 2 minutes
                             timeLabel.setForeground(Color.red);
+                            warn();
+                        } else {
+                            warned = false;
                         }
 
-                        if (timer.getPieceMoveTimeLeft() <= 0
-                                || timer.getGameTimeLeft() <= 0) {
+                        if (timer.getPieceMoveTimeLeft() < -3
+                                || timer.getGameTimeLeft() < -3) {
                             timeOver(team);
                         }
                     }
