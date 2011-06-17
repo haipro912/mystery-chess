@@ -11,4 +11,4 @@ Remain Bug - Feature list:
 -- Refactor listener --> support message, error...
 - Load/save
 - Refactor move/dataChanged Listeners
-- 
+- Localization

@@ -40,7 +40,7 @@ import mysterychess.model.Team;
  */
 public class Util {
 
-    private final static String VERSION = "1.9.2";
+    private final static String VERSION = "1.9.3-sp1";
     private static final String AUTHOR = "Tin Bui-Huy";
     private static final String GRAPHICS_DESIGNER = "Huy Khong-Minh";
     public final static String RMI_SERVER_NAME = "MysteryChessServer";
@@ -160,7 +160,7 @@ public class Util {
     private Util() {
     }
 
-    private static Image loadImage(String fileName) {
+    public static Image loadImage(String fileName) {
         Image img = images.get(fileName);
         if (img == null) {
             String separator = System.getProperty("file.separator");

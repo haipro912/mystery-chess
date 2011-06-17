@@ -23,7 +23,7 @@ import mysterychess.util.Util;
  */
 public abstract class AbstractHost implements CommonRemote {
 
-    List<ModelActionListener> modelActionListeners = new ArrayList<ModelActionListener>();
+//    List<ModelActionListener> modelActionListeners = new ArrayList<ModelActionListener>();
     private Match match;
     private Chatter chater;
     protected boolean ready = false;
