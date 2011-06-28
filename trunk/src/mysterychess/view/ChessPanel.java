@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -225,17 +224,23 @@ public class ChessPanel extends JPanel {
         private Team team;
         private Match match;
         private boolean gameStopped = false;
-        private boolean warned = false;
-        private JLabel warnLabel = new JLabel(
+        private boolean pieceMoveTimeWarned = false;
+        private JLabel pieceMoveTimeWarnLabel = new JLabel(
                 new ImageIcon(Util.loadImage("alarm.gif").getScaledInstance(30, 30, Image.SCALE_DEFAULT)));
+//        private boolean gameTimeWarned = false;
+        private JLabel gameTimeWarnLabel = new JLabel(
+                new ImageIcon(Util.loadImage("monkey.gif").getScaledInstance(30, 30, Image.SCALE_DEFAULT)));
 
         public TimerPanel(Match match, Team team) {
             this.team = team;
             this.match = match;
             setLayout(new FlowLayout(FlowLayout.RIGHT));
-            warnLabel.setVisible(false);
-            add(warnLabel);
+            pieceMoveTimeWarnLabel.setVisible(false);
+            gameTimeWarnLabel.setVisible(false);
+            add(gameTimeWarnLabel);
             add(timeLabel);
+            add(pieceMoveTimeWarnLabel);
+
             match.addDataChangedListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -256,7 +261,8 @@ public class ChessPanel extends JPanel {
                                 TimerPanel.this.team = TimerPanel.this.match.getTeam(TimerPanel.this.team.getPosition());
                                 timer.reset();
                                 gameStopped = false;
-                                warned = false;
+                                pieceMoveTimeWarned = false;
+                                setGameTimeWarn(false);
                             }
                         }
                     }
@@ -266,7 +272,8 @@ public class ChessPanel extends JPanel {
 
                 public void actionPerformed(ActionEvent e) {
                     gameStopped = true;
-                    warned = false;
+                    pieceMoveTimeWarned = false;
+                    setGameTimeWarn(false);
                 }
             });
 
@@ -282,30 +289,35 @@ public class ChessPanel extends JPanel {
 
                 public void shutdownRequested() {
                     gameStopped = true;
-                    warned = false;
+                    pieceMoveTimeWarned = false;
                 }
             });
         }
 
-        private void warn() {
-            if (!warned) {
+        private void pieceMoveTimeWarn() {
+            if (!pieceMoveTimeWarned) {
                 Thread t = new Thread() {
+
                     public void run() {
                         try {
-                            warnLabel.setVisible(true);
+                            pieceMoveTimeWarnLabel.setVisible(true);
                             sleep(3000);
-                            warnLabel.setVisible(false);
+                            pieceMoveTimeWarnLabel.setVisible(false);
                         } catch (InterruptedException ex) {
-                            
                         }
                     }
                 };
                 t.start();
-                warned = true;
+                pieceMoveTimeWarned = true;
             }
         }
 
+        private void setGameTimeWarn(boolean warn) {
+            gameTimeWarnLabel.setVisible(warn);
+        }
+
         public void run() {
+
             while (true) {
                 try {
                     if (timer.isRunning()) {
@@ -316,15 +328,22 @@ public class ChessPanel extends JPanel {
                     if (!gameStopped) {
                         timeLabel.setText(timer.toString());
                         if (timer.getPieceMoveTimeLeft() < 15 * 1000 // 15 seconds
-                                || timer.getGameTimeLeft() < 2 * 60 * 1000) { // 2 minutes
+                                || timer.getGameTimeLeft() < 3 * 60 * 1000) { // 2 minutes
                             timeLabel.setForeground(Color.red);
-                            warn();
-                        } else {
-                            warned = false;
+                            if (timer.getPieceMoveTimeLeft() < 15 * 1000) { // 15 seconds
+                                pieceMoveTimeWarn();
+                            } else {
+                                pieceMoveTimeWarned = false;
+                            }
+
+                            if (timer.getGameTimeLeft() < 3 * 60 * 1000) {
+                                setGameTimeWarn(true);
+                            }
                         }
 
-                        if (timer.getPieceMoveTimeLeft() < -3
-                                || timer.getGameTimeLeft() < -3) {
+                        // Allow 4 seconds extra
+                        if (timer.getPieceMoveTimeLeft() < -4 * 1000
+                                || timer.getGameTimeLeft() < -4 * 1000) {
                             timeOver(team);
                         }
                     }

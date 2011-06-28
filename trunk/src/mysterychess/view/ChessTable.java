@@ -107,7 +107,7 @@ public class ChessTable extends JPanel {
         });
     }
 
-    public void mouseReleasedHandler(MouseEvent e) {
+    protected void mouseReleasedHandler(MouseEvent e) {
         Point p = toChessTableCoordinate(e.getPoint());
         latestMovedPiece = selectedPiece;
         selectedPiece.move(p, false);
@@ -115,7 +115,7 @@ public class ChessTable extends JPanel {
         repaint();
     }
 
-    public void mouseDraggedHandler(MouseEvent e) {
+    protected void mouseDraggedHandler(MouseEvent e) {
         if (!isEnabled()) {
             return;
         }
