@@ -6,12 +6,16 @@
 package mysterychess.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -20,6 +24,7 @@ import javax.swing.JTextField;
 import mysterychess.model.Match;
 import mysterychess.model.Team;
 import mysterychess.network.Chatter;
+import mysterychess.util.Util;
 
 /**
  *
@@ -70,7 +75,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         JSplitPane splitPane = new JSplitPane();
         contentPane.add(splitPane, java.awt.BorderLayout.CENTER);
-        chessPanel = new ChessPanel(match, chatter);
+        chessPanel = new ChessPanel(match);
         splitPane.setLeftComponent(chessPanel);
         splitPane.setRightComponent(chatPanel);
 
@@ -98,6 +103,23 @@ public class MainFrame extends javax.swing.JFrame {
                 String msg = (String) e.getSource();
                 outputText.append("\n" + "Guest: " + msg);
                 outputText.setCaretPosition(outputText.getText().length());
+                showMessageReceivedIcon();
+            }
+
+            private void showMessageReceivedIcon() {
+                Thread t = new Thread() {
+
+                    public void run() {
+                        try {
+                            Color oldColor = outputText.getBackground();
+                            outputText.setBackground(Color.cyan);
+                            sleep(300);
+                            outputText.setBackground(oldColor);
+                        } catch (InterruptedException ex) {
+                        }
+                    }
+                };
+                t.start();
             }
         });
 

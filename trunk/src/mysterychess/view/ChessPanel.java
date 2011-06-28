@@ -41,7 +41,7 @@ public class ChessPanel extends JPanel {
     private JPanel southPanel;
     private AboutFrame aboutFrame;
 
-    public ChessPanel(Match m, Chatter chater) {
+    public ChessPanel(Match m) {
         this.match = m;
         initComponents();
         match.addRemoteActionListeners(new RemoteActionListener() {
