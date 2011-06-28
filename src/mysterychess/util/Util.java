@@ -40,7 +40,7 @@ import mysterychess.model.Team;
  */
 public class Util {
 
-    private final static String VERSION = "1.9.3-sp1";
+    private final static String VERSION = "1.9.4";
     private static final String AUTHOR = "Tin Bui-Huy";
     private static final String GRAPHICS_DESIGNER = "Huy Khong-Minh";
     public final static String RMI_SERVER_NAME = "MysteryChessServer";
@@ -155,16 +155,12 @@ public class Util {
         return loadImage("icon.png");
     }
 
- 
-
     private Util() {
     }
 
     public static Image loadImage(String fileName) {
         Image img = images.get(fileName);
         if (img == null) {
-            String separator = System.getProperty("file.separator");
-            //                URL url = ClassLoader.getSystemResource("images" + separator + fileName);
             URL url = Util.class.getResource(fileName);
             if (url != null) {
                 img = Toolkit.getDefaultToolkit().getImage(url);
@@ -204,118 +200,157 @@ public class Util {
         source.add(new Soldier());
         source.add(new Soldier());
         
-        // Shuffle twice for sure
         List<Role> result = shuffle(source);
-        return shuffle(result);
+        return result;
     }
     
        private static <T> List<T> shuffle(List<T> list) {
-        Collections.shuffle(list, new Random(System.nanoTime()));
+        // This will help the random better
+        boolean randomSufferFirst = (System.nanoTime() % 2 == 0);
+        List<T> l = new ArrayList<T>(list);
+        if (randomSufferFirst) {
+            Collections.shuffle(l, new Random(System.nanoTime() % 10000));
+        }
+
         List<T> result = new ArrayList<T>();
         do {
-            int index = (int) (System.nanoTime() % list.size());
-            result.add(list.remove(index));
-        } while (list.size() > 1);
-        result.add(list.remove(0));
+            int index = (int) (System.nanoTime() % l.size());
+            result.add(l.remove(index));
+        } while (l.size() > 1);
+        result.add(l.remove(0));
         
-        Collections.shuffle(result, new Random(System.nanoTime()));
+        if (!randomSufferFirst) {
+            Collections.shuffle(result, new Random(System.nanoTime()));
+        }
         return result;
     }
 
     public static Team createMysteryTopTeam(Match match) {
         Team team = new Team(match, Team.TeamColor.BLACK);
-        List<Role> roles = generateRandomRoles();
+        List<Role> actualRoles = generateRandomRoles();
         List<Piece> pieces = new ArrayList<Piece>();
 
-        Piece p = new Piece(team, BLACK_GENERAL_DEFAULT_POSITION, new General(), new General(), true);
+        Piece p;
+        p = new Piece(team, BLACK_ADVISOR1_DEFAULT_POSITION, new Advisor(), false);
         pieces.add(p);
-        int i = 0;
-
-        p = new Piece(team, BLACK_ADVISOR1_DEFAULT_POSITION, new Advisor(), roles.get(i++), false);
-        pieces.add(p);
-        p = new Piece(team, BLACK_ADVISOR2_DEFAULT_POSITION, new Advisor(), roles.get(i++), false);
+        p = new Piece(team, BLACK_ADVISOR2_DEFAULT_POSITION, new Advisor(), false);
         pieces.add(p);
 
-        p = new Piece(team, BLACK_CANNON1_DEFAULT_POSITION, new Cannon(), roles.get(i++), false);
+        p = new Piece(team, BLACK_CANNON1_DEFAULT_POSITION, new Cannon(), false);
         pieces.add(p);
-        p = new Piece(team, BLACK_CANNON2_DEFAULT_POSITION, new Cannon(), roles.get(i++), false);
-        pieces.add(p);
-
-        p = new Piece(team, BLACK_CHARIOT1_DEFAULT_POSITION, new Chariot(), roles.get(i++), false);
-        pieces.add(p);
-        p = new Piece(team, BLACK_CHARIOT2_DEFAULT_POSITION, new Chariot(), roles.get(i++), false);
+        p = new Piece(team, BLACK_CANNON2_DEFAULT_POSITION, new Cannon(), false);
         pieces.add(p);
 
-        p = new Piece(team, BLACK_ELEPHANT1_DEFAULT_POSITION, new Elephant(), roles.get(i++), false);
+        p = new Piece(team, BLACK_CHARIOT1_DEFAULT_POSITION, new Chariot(), false);
         pieces.add(p);
-        p = new Piece(team, BLACK_ELEPHANT2_DEFAULT_POSITION, new Elephant(), roles.get(i++), false);
+        p = new Piece(team, BLACK_CHARIOT2_DEFAULT_POSITION, new Chariot(), false);
         pieces.add(p);
 
-        p = new Piece(team, BLACK_HORSE1_DEFAULT_POSITION, new Horse(), roles.get(i++), false);
+        p = new Piece(team, BLACK_ELEPHANT1_DEFAULT_POSITION, new Elephant(), false);
         pieces.add(p);
-        p = new Piece(team, BLACK_HORSE2_DEFAULT_POSITION, new Horse(), roles.get(i++), false);
+        p = new Piece(team, BLACK_ELEPHANT2_DEFAULT_POSITION, new Elephant(), false);
+        pieces.add(p);
+
+        p = new Piece(team, BLACK_HORSE1_DEFAULT_POSITION, new Horse(), false);
+        pieces.add(p);
+        p = new Piece(team, BLACK_HORSE2_DEFAULT_POSITION, new Horse(), false);
         pieces.add(p);
 
 
-        p = new Piece(team, BLACK_SOLDIER1_DEFAULT_POSITION, new Soldier(), roles.get(i++), false);
+        p = new Piece(team, BLACK_SOLDIER1_DEFAULT_POSITION, new Soldier(), false);
         pieces.add(p);
-        p = new Piece(team, BLACK_SOLDIER2_DEFAULT_POSITION, new Soldier(), roles.get(i++), false);
+        p = new Piece(team, BLACK_SOLDIER2_DEFAULT_POSITION, new Soldier(), false);
         pieces.add(p);
-        p = new Piece(team, BLACK_SOLDIER3_DEFAULT_POSITION, new Soldier(), roles.get(i++), false);
+        p = new Piece(team, BLACK_SOLDIER3_DEFAULT_POSITION, new Soldier(), false);
         pieces.add(p);
-        p = new Piece(team, BLACK_SOLDIER4_DEFAULT_POSITION, new Soldier(), roles.get(i++), false);
+        p = new Piece(team, BLACK_SOLDIER4_DEFAULT_POSITION, new Soldier(), false);
         pieces.add(p);
-        p = new Piece(team, BLACK_SOLDIER5_DEFAULT_POSITION, new Soldier(), roles.get(i++), false);
+        p = new Piece(team, BLACK_SOLDIER5_DEFAULT_POSITION, new Soldier(), false);
         pieces.add(p);
 
+        // Shuffle the pieces and then set actual roles
+        pieces = shuffle(pieces);
+        assignActualRole(pieces, actualRoles);
+        
+        p = new Piece(team, BLACK_GENERAL_DEFAULT_POSITION, new General(), true);
+        pieces.add(p);
         team.setPieces(pieces);
+
         return team;
+    }
+
+    private static void assignActualRole(List<Piece> pieces, List<Role> actualRoles) {
+        // Ensure there is no 2-Chariot at the first row
+        int repeat = 0; 
+        while (repeat < 20 && isTwoChariotAtFirstRow(pieces, actualRoles)) {
+            repeat++;
+            pieces = shuffle(pieces);
+        }
+        for (int i = 0; i < pieces.size(); i++) {
+            pieces.get(i).setActualRole(actualRoles.get(i));
+        }
+    }
+    
+    private static boolean isTwoChariotAtFirstRow(List<Piece> pieces, List<Role> actualRoles) {
+        int count =0;
+        for (int i = 0; i < pieces.size(); i++) {
+            if (pieces.get(i).getCurrentRole() instanceof Soldier 
+                    && actualRoles.get(i) instanceof Chariot) {
+                count++;
+            }
+        }
+        return (count == 2);
     }
 
     public static Team createMysteryBottomTeam(Match match) {
         Team team = new Team(match, Team.TeamColor.WHITE);
-        List<Role> roles = generateRandomRoles();
+        List<Role> actualRoles = generateRandomRoles();
         List<Piece> pieces = new ArrayList<Piece>();
 
-        Piece p = new Piece(team, transform(BLACK_GENERAL_DEFAULT_POSITION), new General(), new General(), true);
+        Piece p;
+        p = new Piece(team, transform(BLACK_ADVISOR1_DEFAULT_POSITION), new Advisor(), false);
         pieces.add(p);
-        int i = 0;
-
-        p = new Piece(team, transform(BLACK_ADVISOR1_DEFAULT_POSITION), new Advisor(), roles.get(i++), false);
-        pieces.add(p);
-        p = new Piece(team, transform(BLACK_ADVISOR2_DEFAULT_POSITION), new Advisor(), roles.get(i++), false);
+        p = new Piece(team, transform(BLACK_ADVISOR2_DEFAULT_POSITION), new Advisor(), false);
         pieces.add(p);
 
-        p = new Piece(team, transform(BLACK_CANNON1_DEFAULT_POSITION), new Cannon(), roles.get(i++), false);
+        p = new Piece(team, transform(BLACK_CANNON1_DEFAULT_POSITION), new Cannon(), false);
         pieces.add(p);
-        p = new Piece(team, transform(BLACK_CANNON2_DEFAULT_POSITION), new Cannon(), roles.get(i++), false);
-        pieces.add(p);
-
-        p = new Piece(team, transform(BLACK_CHARIOT1_DEFAULT_POSITION), new Chariot(), roles.get(i++), false);
-        pieces.add(p);
-        p = new Piece(team, transform(BLACK_CHARIOT2_DEFAULT_POSITION), new Chariot(), roles.get(i++), false);
+        p = new Piece(team, transform(BLACK_CANNON2_DEFAULT_POSITION), new Cannon(), false);
         pieces.add(p);
 
-        p = new Piece(team, transform(BLACK_ELEPHANT1_DEFAULT_POSITION), new Elephant(), roles.get(i++), false);
+        p = new Piece(team, transform(BLACK_CHARIOT1_DEFAULT_POSITION), new Chariot(), false);
         pieces.add(p);
-        p = new Piece(team, transform(BLACK_ELEPHANT2_DEFAULT_POSITION), new Elephant(), roles.get(i++), false);
+        p = new Piece(team, transform(BLACK_CHARIOT2_DEFAULT_POSITION), new Chariot(), false);
         pieces.add(p);
 
-        p = new Piece(team, transform(BLACK_HORSE1_DEFAULT_POSITION), new Horse(), roles.get(i++), false);
+        p = new Piece(team, transform(BLACK_ELEPHANT1_DEFAULT_POSITION), new Elephant(), false);
         pieces.add(p);
-        p = new Piece(team, transform(BLACK_HORSE2_DEFAULT_POSITION), new Horse(), roles.get(i++), false);
+        p = new Piece(team, transform(BLACK_ELEPHANT2_DEFAULT_POSITION), new Elephant(), false);
+        pieces.add(p);
+
+        p = new Piece(team, transform(BLACK_HORSE1_DEFAULT_POSITION), new Horse(), false);
+        pieces.add(p);
+        p = new Piece(team, transform(BLACK_HORSE2_DEFAULT_POSITION), new Horse(), false);
         pieces.add(p);
 
 
-        p = new Piece(team, transform(BLACK_SOLDIER1_DEFAULT_POSITION), new Soldier(), roles.get(i++), false);
+        p = new Piece(team, transform(BLACK_SOLDIER1_DEFAULT_POSITION), new Soldier(), false);
         pieces.add(p);
-        p = new Piece(team, transform(BLACK_SOLDIER2_DEFAULT_POSITION), new Soldier(), roles.get(i++), false);
+        p = new Piece(team, transform(BLACK_SOLDIER2_DEFAULT_POSITION), new Soldier(), false);
         pieces.add(p);
-        p = new Piece(team, transform(BLACK_SOLDIER3_DEFAULT_POSITION), new Soldier(), roles.get(i++), false);
+        p = new Piece(team, transform(BLACK_SOLDIER3_DEFAULT_POSITION), new Soldier(), false);
         pieces.add(p);
-        p = new Piece(team, transform(BLACK_SOLDIER4_DEFAULT_POSITION), new Soldier(), roles.get(i++), false);
+        p = new Piece(team, transform(BLACK_SOLDIER4_DEFAULT_POSITION), new Soldier(), false);
         pieces.add(p);
-        p = new Piece(team, transform(BLACK_SOLDIER5_DEFAULT_POSITION), new Soldier(), roles.get(i++), false);
+        p = new Piece(team, transform(BLACK_SOLDIER5_DEFAULT_POSITION), new Soldier(), false);
+        pieces.add(p);
+
+        // Shuffle the pieces and then set actual roles
+        pieces = shuffle(pieces);
+        assignActualRole(pieces, actualRoles);
+
+        // Add general piece
+        p = new Piece(team, transform(BLACK_GENERAL_DEFAULT_POSITION), new General(), true);
         pieces.add(p);
 
         team.setPieces(pieces);
@@ -373,7 +408,6 @@ public class Util {
 
     public static Team createNormalBottomTeam(Match match) {
         Team team = new Team(match, Team.TeamColor.WHITE);
-        List<Role> roles = generateRandomRoles();
         List<Piece> pieces = new ArrayList<Piece>();
 
         Piece p = new Piece(team, transform(BLACK_GENERAL_DEFAULT_POSITION), new General(), null, true);

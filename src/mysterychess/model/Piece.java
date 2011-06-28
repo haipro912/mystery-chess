@@ -17,16 +17,16 @@ public class Piece implements Serializable {
     private boolean turnedUp = false;
 
     public Piece(Team team, Point position, Role currentRole, Role actualRole, boolean turnedUp) {
+        this(team, position, currentRole, turnedUp);
+        setActualRole(actualRole);
+    }
+
+    public Piece(Team team, Point position, Role currentRole, boolean turnedUp) {
         this.team = team;
         this.position = position;
         this.currentRole = currentRole;
-        this.actualRole = actualRole;
         this.turnedUp = turnedUp;
-
         currentRole.setMyPiece(this);
-        if (actualRole != null) {
-            actualRole.setMyPiece(this);
-        }
     }
 
     public boolean isTurnedUp() {
@@ -55,11 +55,14 @@ public class Piece implements Serializable {
             return currentRole;
         }
         return actualRole;
-
     }
 
     public void setActualRole(Role actualRole) {
         this.actualRole = actualRole;
+        if (actualRole != null) {
+            actualRole.setMyPiece(this);
+        }
+
     }
 
     public Role getCurrentRole() {
@@ -68,6 +71,7 @@ public class Piece implements Serializable {
 
     public void setCurrentRole(Role currentRole) {
         this.currentRole = currentRole;
+        currentRole.setMyPiece(this);
     }
 
     public Point getPosition() {

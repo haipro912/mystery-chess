@@ -10,5 +10,6 @@ Remain Bug - Feature list:
 - Have a good exception handling system --> show proper message
 -- Refactor listener --> support message, error...
 - Load/save
+- Record, replay
 - Refactor move/dataChanged Listeners
 - Localization
