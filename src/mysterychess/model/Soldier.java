@@ -1,6 +1,8 @@
 package mysterychess.model;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -77,4 +79,31 @@ public class Soldier extends Role {
 
         return true;
     }
+
+	@Override
+	public List<Point> possibleSteps() {
+		List<Point> steps = new ArrayList<Point>();
+		Point current = myPiece.getPosition();
+
+		// Move forward
+		Point temp = null;
+		if (myPiece.getTeam().getPosition() == Team.TeamPosition.TOP) {
+			temp = new Point(current.x, current.y + 1);
+		} else {
+			temp = new Point(current.x, current.y - 1);
+		}
+		if (isPossiblePoint(temp) && !isDuplicated(temp)) {
+			steps.add(temp);
+		}
+
+		// Try to make horizontal moves as a blind!
+		for (int i = -1; i <= 1; i++) {
+			if (i == 0) continue;
+			temp = new Point(current.x + i, current.y);
+			if (isPossiblePoint(temp) && !isDuplicated(temp)) {
+				steps.add(temp);
+			}
+		}
+		return steps;
+	}
 }

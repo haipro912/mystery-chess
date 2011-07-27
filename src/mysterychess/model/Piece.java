@@ -16,6 +16,15 @@ public class Piece implements Serializable {
     private Role currentRole;
     private boolean turnedUp = false;
 
+    /**
+     * When game mate, this field is set to true if this fiece can capture the general 
+     */
+    private boolean isAttacker = false;
+    /**
+     * Use for matecheck
+     */
+    private boolean enable = true;
+    
     public Piece(Team team, Point position, Role currentRole, Role actualRole, boolean turnedUp) {
         this(team, position, currentRole, turnedUp);
         setActualRole(actualRole);
@@ -93,4 +102,20 @@ public class Piece implements Serializable {
     public boolean canCapture(Piece p) {
         return currentRole.canCapture(p);
     }
+
+	public void setAttacker(boolean isAttacker) {
+		this.isAttacker = isAttacker;
+	}
+
+	public boolean isAttacker() {
+		return isAttacker;
+	}
+
+	public void setEnable(boolean enable) {
+		this.enable = enable;
+	}
+
+	public boolean isEnable() {
+		return enable;
+	}
 }

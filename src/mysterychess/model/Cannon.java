@@ -1,6 +1,7 @@
 package mysterychess.model;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,4 +57,35 @@ public class Cannon extends Role {
     protected boolean isPossiblePoint(Point position) {
         return isPossiblePoint(position, true);
     }
+
+	@Override
+	public List<Point> possibleSteps() {
+		List<Point> steps = new ArrayList<Point>();
+		Point current = myPiece.getPosition();
+		// row steps
+		for (int i = 0; i < 9; i++) {
+			if (i == current.x) continue;
+			Point temp = new Point(i, current.y);
+			if (!isDuplicated(temp)) {
+				// Cannon has two types of move
+				Piece victim = myPiece.getTeam().getMatch().getPieceAt(temp);
+				if (isPossiblePoint(temp, victim != null)) {
+					steps.add(temp);
+				}
+			}
+		}
+		// column steps
+		for (int j = 0; j < 10; j++) {
+			if (j == current.y) continue;
+			Point temp = new Point(current.x, j);
+			if (!isDuplicated(temp)) {
+				// Cannon has two types of move
+				Piece victim = myPiece.getTeam().getMatch().getPieceAt(temp);
+				if (isPossiblePoint(temp, victim != null)) {
+					steps.add(temp);
+				}
+			}
+		}
+		return steps;
+	}
 }
