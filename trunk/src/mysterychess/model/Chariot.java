@@ -1,6 +1,7 @@
 package mysterychess.model;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,4 +45,26 @@ public class Chariot extends Role {
         }
         return true;
     }
+
+	@Override
+	public List<Point> possibleSteps() {
+		List<Point> steps = new ArrayList<Point>();
+		Point current = myPiece.getPosition();
+
+		for (int i = 0; i < 9; i++) {
+			if (i == current.x) continue;
+			Point temp = new Point(i, current.y);
+			if (isPossiblePoint(temp) && !isDuplicated(temp)) {
+				steps.add(temp);
+			}
+		}
+		for (int j = 0; j < 10; j++) {
+			if (j == current.y) continue;
+			Point temp = new Point(current.x, j);
+			if (isPossiblePoint(temp) && !isDuplicated(temp)) {
+				steps.add(temp);
+			}
+		}
+		return steps;
+	}
 }

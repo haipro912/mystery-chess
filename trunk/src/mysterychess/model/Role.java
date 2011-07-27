@@ -2,6 +2,9 @@ package mysterychess.model;
 
 import java.awt.Point;
 import java.io.Serializable;
+import java.util.List;
+
+import mysterychess.model.Team.TeamColor;
 
 /**
  *
@@ -30,6 +33,9 @@ public abstract class Role implements Serializable {
 
     public boolean move(Point toPosition, boolean validated) {
         Point oldPos = myPiece.getPosition();
+        if (!isValidLogic(toPosition)) {
+			return false;
+		}
         if (validated) {
             Piece captured = myPiece.getTeam().getMatch().getPieceAt(toPosition);
             if (captured != null) {
@@ -95,4 +101,61 @@ public abstract class Role implements Serializable {
     }
 
     protected abstract boolean isPossiblePoint(Point position);
+    
+    /**
+	 * Get all possible steps of the role The Tran
+	 * 
+	 * @return Empty list if no possible steps found
+	 */
+	public abstract List<Point> possibleSteps();
+	
+    /**
+	 * My team's piece is at the toPosition.<br/>
+	 * We can not attack my team, of course
+	 * 
+	 * @param toPosition
+	 * @return
+	 */
+	protected boolean isDuplicated(Point toPosition) {
+		Piece capturedPie = myPiece.getTeam().getPieceAt(toPosition);
+		return capturedPie != null;
+	}
+	
+    /**
+	 * The team can not make the move if its general is captured
+	 * 
+	 * @param newPosition
+	 * @return
+	 */
+    public boolean isValidLogic(Point newPosition) {
+    	Match m = myPiece.getTeam().getMatch();
+		TeamColor myColor = myPiece.getTeam().getColor();
+		Team otherTeam = (myColor == TeamColor.WHITE) ? m.getBlackTeam() : m.getWhiteTeam();
+		
+		Piece general = myPiece.getTeam().getGeneral();
+		Point old = myPiece.getPosition();
+		myPiece.setPosition(newPosition);
+		
+		Piece dummy = otherTeam.getPieceAt(newPosition);
+		if (dummy != null) {
+			dummy.setEnable(false);
+		}
+		
+		boolean valid = true;
+		for (Piece p : otherTeam.getPieces()) {
+			if (p.isEnable() && p.canCapture(general)) {
+				myPiece.setPosition(old);
+				if (dummy != null) {
+					dummy.setEnable(true);
+				}
+				p.setAttacker(true);
+				valid = false;
+			}
+		}
+		myPiece.setPosition(old);
+		if (dummy != null) {
+			dummy.setEnable(true);
+		}
+		return valid;
+    }
 }

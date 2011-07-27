@@ -1,6 +1,7 @@
 package mysterychess.model;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -91,4 +92,32 @@ public class General extends Role {
         List<Piece> preventPieces = myPiece.getTeam().getMatch().getPieces(myPiece.getPosition(), general.getPosition());
         return preventPieces.isEmpty();
     }
+
+	@Override
+	public boolean canCapture(Piece p) {
+		return isGeneralsFaceToFace(p);
+	}
+
+	@Override
+	public List<Point> possibleSteps() {
+		List<Point> steps = new ArrayList<Point>();
+		Point current = myPiece.getPosition();
+		
+		for (int i = -1; i <= 1; i++) {
+			if (i == 0) continue;
+			Point temp = new Point(current.x + i, current.y);
+			if (isPossiblePoint(temp) && !isDuplicated(temp)) {
+				steps.add(temp);
+			}
+		}
+		for (int j = -1; j <= 1; j++) {
+			if (j == 0) continue;
+			Point temp = new Point(current.x, current.y + j);
+			if (isPossiblePoint(temp) && !isDuplicated(temp)) {
+				steps.add(temp);
+			}
+		}
+		return steps;
+	}
+
 }

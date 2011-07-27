@@ -345,6 +345,14 @@ public class Match {
         }
         checkPiece = null;
         checkPiece = determineCheck(checkTeam, general);
+
+		// TODO The Tran
+		if (!canDefense()) {
+			checkmated(pieceMoved.getTeam());
+		} else {
+			resetAttacker();
+		}
+
         if (checkPiece != null) {
             checkmated(checkTeam);
         } else {
@@ -371,6 +379,39 @@ public class Match {
         return null;
     }
 
+	private void resetAttacker() {
+		for (Piece p : blackTeam.getPieces()) {
+			p.setAttacker(false);
+		}
+		for (Piece p : whiteTeam.getPieces()) {
+			p.setAttacker(false);
+		}
+	}
+
+	private boolean canDefense() {
+		resetAttacker(); 
+		
+		Team defenseTeam = getActiveTeam();
+		for (Piece p : defenseTeam.getPieces()) {
+			Role role = p.getCurrentRole();
+			if (role == null) {
+				role = p.getActualRole();
+			}
+			for (Point step : role.possibleSteps()) {
+				if (role.isValidLogic(step)) {
+					// we still have steps to defense
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Show WON dialog
+	 * 
+	 * @param wonTeam
+	 */
     private void checkmated(Team wonTeam) {
         stop(wonTeam.getColor().getDisplayName() + " team has won the game!");
     }

@@ -1,6 +1,8 @@
 package mysterychess.model;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -73,4 +75,22 @@ public class Elephant extends Role {
         }
         return true;
     }
+
+	@Override
+	public List<Point> possibleSteps() {
+		List<Point> steps = new ArrayList<Point>();
+		Point current = myPiece.getPosition();
+
+		for (int i = -2; i <= 2; i += 2) {
+			if (i == 0) continue;
+			for (int j = -2; j <= 2; j += 2) {
+				if (j == 0) continue;
+				Point temp = new Point(current.x + i, current.y + j);
+				if (isPossiblePoint(temp) && !isDuplicated(temp)) {
+					steps.add(temp);
+				}
+			}
+		}
+		return steps;
+	}
 }
