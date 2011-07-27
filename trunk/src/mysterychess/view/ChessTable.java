@@ -304,6 +304,9 @@ public class ChessTable extends JPanel {
         for (Piece p : pieces) {
             if (p != selectedPiece) {
                 drawPiece(g, p, size);
+                if (p.isAttacker()) {
+                	drawSquare(g, toScreenCoordinate(p.getPosition()), size, Color.RED);
+                }
             }
         }
         if (selectedPiece != null) {
