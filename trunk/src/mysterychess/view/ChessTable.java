@@ -252,11 +252,23 @@ public class ChessTable extends JPanel {
     }
 
     private void drawMark(Graphics g, int x, int y) {
-        int delta = 3;
+        int len = Math.round(unit / 6);
+        int d = Math.round(unit / 15);
+        int ax = Math.round(x * unit) + xMargin;
+        int ay = Math.round(y * unit) + yMargin;
 
-        g.drawRect(Math.round(x * unit - delta) + xMargin,
-                Math.round(y * unit - delta) + yMargin,
-                2 * delta, 2 * delta);
+        for (int i = -1; i <= 1; i++) {
+            if (i == 0) continue;
+            for (int j = -1; j <= 1; j++) {
+                if (j == 0) continue;
+                if (x == 0 && i < 0) continue;
+                if (x == 8 && i > 0) continue;
+                int x1 = ax + d * i;
+                int y1 = ay + d * j;
+                g.drawLine(x1, y1, x1 + len * i, y1);
+                g.drawLine(x1, y1, x1, y1 + len * j);
+            }
+        }
     }
 
     private void drawPalaces(Graphics g) {
