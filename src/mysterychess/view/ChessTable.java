@@ -225,29 +225,13 @@ public class ChessTable extends JPanel {
     }
 
     private void decorate(Graphics g) {
-        int[] xs = {1, 7};
-        int y = 2;
-
-        for (int i = 0; i < xs.length; i++) {
-            drawMark(g, xs[i], y);
-        }
-
-        xs = new int[]{0, 2, 4, 6, 8};
-        y = 3;
-        for (int i = 0; i < xs.length; i++) {
-            drawMark(g, xs[i], y);
-        }
-
-        xs = new int[]{0, 2, 4, 6, 8};
-        y = 6;
-        for (int i = 0; i < xs.length; i++) {
-            drawMark(g, xs[i], y);
-        }
-
-        xs = new int[]{1, 7};
-        y = 7;
-        for (int i = 0; i < xs.length; i++) {
-            drawMark(g, xs[i], y);
+        drawMark(g, 1, 2);
+        drawMark(g, 1, 7);
+        drawMark(g, 7, 2);
+        drawMark(g, 7, 7);
+        for (int i = 0; i <= 8; i += 2) {
+            drawMark(g, i, 3);
+            drawMark(g, i, 6);
         }
     }
 
