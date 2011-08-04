@@ -33,6 +33,9 @@ public class ChatPanel extends JPanel {
     /**
      * 
      */
+    private final static Color CHAT_HIGHLIGHT_COLOR = new Color(0x4054cc80, true);
+    private final static Color CHAT_BACKGROUND_COLOR = new Color(0xffffff);
+
     private static final long serialVersionUID = 1L;
     private static final String NEWLINE = System.getProperty("line.separator");
 
@@ -180,10 +183,9 @@ public class ChatPanel extends JPanel {
                 Thread t = new Thread() {
                     public void run() {
                         try {
-                            Color oldColor = outputPane.getBackground();
-                            outputPane.setBackground(Color.cyan);
+                            outputPane.setBackground(CHAT_HIGHLIGHT_COLOR);
                             sleep(300);
-                            outputPane.setBackground(oldColor);
+                            outputPane.setBackground(CHAT_BACKGROUND_COLOR);
                         } catch (InterruptedException ex) {
                         }
                     }
@@ -193,7 +195,6 @@ public class ChatPanel extends JPanel {
         });
 
     }
-
     protected void addStylesToDocument(StyledDocument doc) {
         Style def = StyleContext.getDefaultStyleContext().getStyle(
                 StyleContext.DEFAULT_STYLE);

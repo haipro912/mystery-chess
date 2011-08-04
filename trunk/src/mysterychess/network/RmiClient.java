@@ -208,6 +208,11 @@ public class RmiClient extends AbstractHost implements ClientCallback {
     public CommonRemote getOtherSide() {
         return server;
     }
+    
+    @Override
+    public void removeOtherSide() {
+        server = null;
+    }
 
     @Override
     protected Point transform(Point p) {

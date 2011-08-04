@@ -6,9 +6,12 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import common.io.ReadWriteObjectFile;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -495,12 +498,10 @@ public class Match {
 
     public void loadGame(String fileName) {
         try {
-            ReadWriteObjectFile rw = new ReadWriteObjectFile();
-            if (fileName == null || fileName.equals("")) {
-                return;
-            }
-            rw.load(fileName);
-            TableDto table = (TableDto) rw.getObjects()[0];
+            FileInputStream f = new FileInputStream(fileName);
+            ObjectInputStream os = new ObjectInputStream(f);
+            TableDto table = (TableDto) os.readObject();
+            os.close();
             gameLoaded(table);
         } catch (Exception e) {
             Logger.getLogger(Match.class.getName()).log(Level.SEVERE, e.toString(), e);
@@ -509,12 +510,11 @@ public class Match {
 
     public void saveGame(String fileName) {
         try {
-            ReadWriteObjectFile rw = new ReadWriteObjectFile();
-            if (fileName == null || fileName.equals("")) {
-                return;
-            }
-            rw.add(TableDto.toDtoTable(this));
-            rw.save(fileName);
+            FileOutputStream f = new FileOutputStream(fileName);
+            ObjectOutputStream os = new ObjectOutputStream(f);
+            os.writeObject(TableDto.toDtoTable(this));
+            os.flush();
+            os.close();
         } catch (Exception e) {
             Logger.getLogger(Match.class.getName()).severe("Fail to save file");
         }

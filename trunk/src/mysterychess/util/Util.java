@@ -44,7 +44,7 @@ import mysterychess.model.Team;
  */
 public class Util {
 
-    private final static String VERSION = "1.9.4";
+    private final static String VERSION = "2.0";
     private static final String AUTHOR = "Tin Bui-Huy";
     private static final String GRAPHICS_DESIGNER = "Huy Khong-Minh";
     public final static String RMI_SERVER_NAME = "MysteryChessServer";
