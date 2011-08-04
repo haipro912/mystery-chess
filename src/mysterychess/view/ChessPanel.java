@@ -341,7 +341,7 @@ public class ChessPanel extends JPanel {
                             }
                         }
 
-                        // Allow 4 seconds extra
+                        // Allow 5 seconds extra
                         if (timer.getPieceMoveTimeLeft() < -4 * 1000
                                 || timer.getGameTimeLeft() < -4 * 1000) {
                             timeOver(team);

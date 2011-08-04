@@ -33,6 +33,7 @@ public abstract class AbstractHost implements CommonRemote {
     }
 
     protected abstract CommonRemote getOtherSide();
+    protected abstract void removeOtherSide();
 
     protected abstract void createNewGame(ChessType type, TeamColor bottomTeam);
 
@@ -42,11 +43,12 @@ public abstract class AbstractHost implements CommonRemote {
         try {
             CommonRemote otherPlayer = getOtherSide();
             if (otherPlayer != null) {
-                getOtherSide().resigned();
+                otherPlayer.resigned();
             }
             System.exit(0);
         } catch (RemoteException ex) {
-            Logger.getLogger(AbstractHost.class.getName()).log(Level.SEVERE, null, ex);
+            // The connection may be closed
+            // Ignore it
         }
     }
 
@@ -218,6 +220,7 @@ public abstract class AbstractHost implements CommonRemote {
      */
     public void resigned() throws RemoteException {
         match.resign(false);
+        removeOtherSide();
     }
     
         /**
