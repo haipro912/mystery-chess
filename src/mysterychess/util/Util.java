@@ -18,7 +18,11 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+
+import mysterychess.Main;
 import mysterychess.model.Advisor;
 import mysterychess.model.Cannon;
 import mysterychess.model.Chariot;
@@ -488,5 +492,16 @@ public class Util {
             }
         }
         return loadImage(fileName);
+    }
+
+    /** Returns an ImageIcon, or null if the path was invalid. */
+    public static ImageIcon createImageIcon(String path, String description) {
+        java.net.URL imgURL = Util.class.getResource(path);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL, description);
+        } else {
+            System.err.println("Couldn't find file: " + path);
+            return null;
+        }
     }
 }

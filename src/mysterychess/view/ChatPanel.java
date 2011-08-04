@@ -22,6 +22,7 @@ import javax.swing.text.StyledDocument;
 
 import mysterychess.Main;
 import mysterychess.network.Chatter;
+import mysterychess.util.Util;
 
 /**
  * @author The Tran
@@ -92,7 +93,7 @@ public class ChatPanel extends JPanel {
     private void appendAnimationGif(int gifCode) {
         StyledDocument doc = outputPane.getStyledDocument();
         try {
-            setAnimationGif(doc, "../anim/" + gifCode + ".gif");
+            setAnimationGif(doc, "anim/" + gifCode + ".gif");
             doc.insertString(doc.getLength(), " ", doc.getStyle(ANIMATION));
         } catch (BadLocationException ble) {
             System.err
@@ -212,20 +213,9 @@ public class ChatPanel extends JPanel {
 
     private void setAnimationGif(StyledDocument doc, String path) {
         Style s = doc.getStyle(ANIMATION);
-        ImageIcon icon = createImageIcon(path, "");
+        ImageIcon icon = Util.createImageIcon(path, "");
         if (icon != null) {
             StyleConstants.setIcon(s, icon);
-        }
-    }
-
-    /** Returns an ImageIcon, or null if the path was invalid. */
-    protected static ImageIcon createImageIcon(String path, String description) {
-        java.net.URL imgURL = Main.class.getResource(path);
-        if (imgURL != null) {
-            return new ImageIcon(imgURL, description);
-        } else {
-            System.err.println("Couldn't find file: " + path);
-            return null;
         }
     }
 }
