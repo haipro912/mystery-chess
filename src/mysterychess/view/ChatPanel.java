@@ -148,6 +148,7 @@ public class ChatPanel extends JPanel {
                 }
             }
         } while (j != -1);
+        outputPane.setCaretPosition(outputPane.getStyledDocument().getLength());
     }
 
     private void addListeners() {
