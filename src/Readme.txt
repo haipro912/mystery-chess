@@ -10,6 +10,8 @@ Installation instruction:
     c. If you failed to start up the application, edit the MysteryChess.bat (or MysteryChess.sh) 
        file to correct the path of java and repeat step b.
 
+3. Done, Enjoy!
 
+-- End of file ---
 
     
