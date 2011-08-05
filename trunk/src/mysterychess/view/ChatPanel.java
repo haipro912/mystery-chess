@@ -6,10 +6,17 @@ package mysterychess.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -20,7 +27,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
-import mysterychess.Main;
 import mysterychess.network.Chatter;
 import mysterychess.util.Util;
 
@@ -33,7 +39,8 @@ public class ChatPanel extends JPanel {
     /**
      * 
      */
-    private final static Color CHAT_HIGHLIGHT_COLOR = new Color(0x4054cc80, true);
+    private final static Color CHAT_HIGHLIGHT_COLOR = new Color(0x4054cc80,
+            true);
     private final static Color CHAT_BACKGROUND_COLOR = new Color(0xffffff);
 
     private static final long serialVersionUID = 1L;
@@ -49,26 +56,36 @@ public class ChatPanel extends JPanel {
      */
     private JTextPane outputPane;
     private JTextField inputText = new JTextField();
+    private JButton tipButton = new JButton("Tip");
 
     private final Chatter chatter;
+    private final Action tipAction = new TipAction();
+    private final TipPanel tipPanel = new TipPanel();
 
     public ChatPanel(Chatter chatter) {
         this.chatter = chatter;
 
         setLayout(new BorderLayout());
         outputPane = createTextPane();
-
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new BorderLayout());
         inputPanel.setSize(new Dimension(100, 20));
+        inputPanel.setLayout(new BorderLayout(0, 0));
         inputPanel.add(inputText, BorderLayout.CENTER);
+        tipButton.setAction(tipAction);
+        inputPanel.add(tipButton, BorderLayout.EAST);
 
+        JPanel outputPanel = new JPanel();
+        outputPanel.setLayout(new BoxLayout(outputPanel, BoxLayout.Y_AXIS));
+        outputPanel.setAlignmentY(CENTER_ALIGNMENT);
+        outputPanel.setSize(new Dimension(100, 100));
         JScrollPane areaScrollPane = new JScrollPane(outputPane);
         areaScrollPane
                 .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        outputPanel.add(areaScrollPane);
+        outputPanel.add(tipPanel);
 
-        add(areaScrollPane, BorderLayout.CENTER);
-        add(inputText, BorderLayout.SOUTH);
+        add(outputPanel, BorderLayout.CENTER);
+        add(inputPanel, BorderLayout.SOUTH);
 
         addListeners();
     }
@@ -195,6 +212,7 @@ public class ChatPanel extends JPanel {
         });
 
     }
+
     protected void addStylesToDocument(StyledDocument doc) {
         Style def = StyleContext.getDefaultStyleContext().getStyle(
                 StyleContext.DEFAULT_STYLE);
@@ -217,6 +235,64 @@ public class ChatPanel extends JPanel {
         ImageIcon icon = Util.createImageIcon(path, "");
         if (icon != null) {
             StyleConstants.setIcon(s, icon);
+        }
+    }
+
+    private class TipPanel extends JPanel {
+
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        public TipPanel() {
+            setLayout(new GridLayout(0, 3));
+
+            for (int i = 1; i <= 20; i++) {
+                add(createButton(i));
+            }
+            setVisible(false);
+        }
+
+        public void toggleVisibility() {
+            setVisible(!isVisible());
+            if (!isVisible()) {
+                inputText.requestFocus();
+            }
+        }
+
+        private JButton createButton(final int gifId) {
+            JButton b = new JButton(Util.createImageIcon("anim/" + gifId + ".gif", ""));
+            b.setMaximumSize(new Dimension(40, 40));
+            b.setBackground(Color.white);
+            b.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    String textToInsert = ":" + gifId + ":";
+                    int p = inputText.getCaretPosition();
+                    String text = inputText.getText();
+                    String newText = text.substring(0, p) + textToInsert + text.substring(p, text.length());
+                    inputText.setText(newText);
+                    super.mouseClicked(e);
+                }
+            });
+            return b;
+        }
+    }
+
+    private class TipAction extends AbstractAction {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        public TipAction() {
+            putValue(NAME, "Tip");
+            putValue(SHORT_DESCRIPTION, "Emotion animation tips");
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            tipPanel.toggleVisibility();
         }
     }
 }
