@@ -18,6 +18,7 @@ import mysterychess.model.Team.TeamColor;
 import mysterychess.network.Chatter;
 import mysterychess.network.RmiClient;
 import mysterychess.network.RmiServer;
+import mysterychess.util.PropertiesLoader;
 import mysterychess.util.Util;
 
 /**
@@ -89,18 +90,13 @@ public class StartupFrame extends JFrame {
     }
 
     private void initComponent() throws Exception {
-        this.setTitle("Mystery Chess " + Util.getVersion()
-                + " - Developed by " + Util.getOriginalAuthor());
+        final PropertiesLoader loader = new PropertiesLoader(Util.APPLICATION_NAME + ".inf");
+        this.setIconImage(Util.getAboutImage());
+        this.setTitle(Util.getApplicationName() + " - " + Util.getVersion());
         titledBorder1 = new TitledBorder("Server or Client");
         this.getContentPane().setLayout(borderLayout1);
         okButton.setPreferredSize(new Dimension(70, 23));
         okButton.setText("OK");
-        okButton.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                startup();
-            }
-        });
 
         mainPanel.setLayout(gridBagLayout1);
         clientRadio.setSelected(true);
@@ -149,12 +145,12 @@ public class StartupFrame extends JFrame {
 
         portLabel.setHorizontalAlignment(SwingConstants.TRAILING);
         portLabel.setText("Port:");
-        portText.setText("4444");
+        portText.setText(loader.getParameter("port", "4444"));
         addressLabel.setHorizontalAlignment(SwingConstants.TRAILING);
         addressLabel.setText("Server address:");
         addressLabel.setVisible(false);
         addressText.setVisible(false);
-        addressText.setText("192.168.103.164");
+        addressText.setText(loader.getParameter("server", "192.168.103.191"));
         iMoveFirstCheck.setHorizontalAlignment(SwingConstants.TRAILING);
         iMoveFirstCheck.setSelected(true);
         iMoveFirstCheck.setText("I move first");
@@ -163,11 +159,11 @@ public class StartupFrame extends JFrame {
         mysteryChessChk.setText("Mystery Chess");
         gameLimitTimeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
         gameLimitTimeLabel.setText("Game limit time:");
-        gameLimitTimeText.setText(String.valueOf(Util.GAME_EXPIRE_TIME/(60*1000)));
+        gameLimitTimeText.setText(String.valueOf(Util.GAME_EXPIRE_TIME / (60 * 1000)));
         gameLimitTimeText.setHorizontalAlignment(SwingConstants.LEFT);
         pieceMoveLimitTimeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
         pieceMoveLimitTimeLabel.setText("Piece move limit time:");
-        pieceMoveLimitTimeText.setText(String.valueOf(Util.PIECE_MOVE_EXPIRE_TIME/1000));
+        pieceMoveLimitTimeText.setText(String.valueOf(Util.PIECE_MOVE_EXPIRE_TIME / 1000));
         secLabel.setText("secs");
         minuteLabel.setText("mins");
         jLabel2.setText("jLabel2");
@@ -225,6 +221,26 @@ public class StartupFrame extends JFrame {
                 new Insets(9, 15, 18, 0), 18, 12));
         mainPanel.add(paddingPanel, new GridBagConstraints(6, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets(0, 7, 0, 0), 19, 7));
+
+        ActionListener enteredActionListener = new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    loader.setParameter("server", addressText.getText());
+                    loader.setParameter("port", portText.getText());
+                    loader.store();
+                } catch (IOException ex) {
+                    Logger.getLogger(StartupFrame.class.getName()).log(Level.WARNING,
+                            "Fail to save application info file", ex);
+                }
+                startup();
+            }
+        };
+        portText.addActionListener(enteredActionListener);
+        pieceMoveLimitTimeText.addActionListener(enteredActionListener);
+        gameLimitTimeText.addActionListener(enteredActionListener);
+        addressText.addActionListener(enteredActionListener);
+        okButton.addActionListener(enteredActionListener);
     }
 
     @Override
@@ -288,7 +304,7 @@ public class StartupFrame extends JFrame {
         } catch (NumberFormatException numberFormatException) {
             JOptionPane.showMessageDialog(this, "Invalid port number");
         } catch (UnknownHostException ue) {
-             Logger.getLogger(StartupFrame.class.getName()).log(Level.SEVERE, "Problem happen while connecting to server", ue);
+            Logger.getLogger(StartupFrame.class.getName()).log(Level.SEVERE, "Problem happen while connecting to server", ue);
             JOptionPane.showMessageDialog(this, "Unknown host");
         } catch (RemoteException e) {
             Logger.getLogger(StartupFrame.class.getName()).log(Level.SEVERE, "Problem happen while starting up", e);

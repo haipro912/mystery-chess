@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,7 +23,6 @@ import mysterychess.model.Match;
 import mysterychess.model.Piece;
 import mysterychess.model.RemoteActionListener;
 import mysterychess.model.Team;
-import mysterychess.network.Chatter;
 import mysterychess.util.Util;
 
 /**
@@ -39,7 +39,7 @@ public class ChessPanel extends JPanel {
     private JPanel capturedPanel;
     private JPanel northPanel;
     private JPanel southPanel;
-    private AboutFrame aboutFrame;
+    private JDialog aboutFrame;
 
     public ChessPanel(Match m) {
         this.match = m;
@@ -164,7 +164,7 @@ public class ChessPanel extends JPanel {
 
     private void showAbout() {
         if (aboutFrame == null) {
-            aboutFrame = new AboutFrame(JOptionPane.getFrameForComponent(this));
+            aboutFrame = new AboutDialog(JOptionPane.getFrameForComponent(this));
         }
         aboutFrame.setLocationRelativeTo(JOptionPane.getFrameForComponent(this));
         aboutFrame.setVisible(true);
