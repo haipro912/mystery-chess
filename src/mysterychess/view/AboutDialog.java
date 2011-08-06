@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
 import mysterychess.util.Util;
 
 /**
@@ -63,12 +64,13 @@ public class AboutDialog extends JDialog {
         jLabel1.setBackground(SystemColor.controlShadow);
         jLabel1.setFont(new java.awt.Font("Arial", Font.BOLD, 11));
         jLabel1.setForeground(new Color(50, 0, 180));
-        jLabel1.setBorder(BorderFactory.createLineBorder(Color.black));
+        jLabel1.setBorder(BorderFactory.createEtchedBorder());
         jLabel1.setOpaque(true);
         jLabel1.setHorizontalAlignment(SwingConstants.LEFT);
         jLabel1.setText("Developers:");
         contributorsText.setBackground(SystemColor.controlHighlight);
         contributorsText.setForeground(new Color(20, 0, 150));
+        contributorsText.setBorder(BorderFactory.createEtchedBorder());
         contributorsText.setEditable(false);
         jPanel2.setLayout(borderLayout5);
         linkToProject.setText("Get latest version or source code!");
@@ -127,6 +129,7 @@ public class AboutDialog extends JDialog {
     BorderLayout borderLayout4 = new BorderLayout();
     BorderLayout borderLayout5 = new BorderLayout();
     JPanel jPanel4 = new JPanel();
+    TitledBorder titledBorder1 = new TitledBorder("");
 
     private void initLabel() {
         this.setTitle(Util.getApplicationName() + " - " + Util.getVersion());
