@@ -16,6 +16,7 @@ import javax.swing.JSplitPane;
 
 import mysterychess.model.Match;
 import mysterychess.network.Chatter;
+import mysterychess.util.Util;
 
 /**
  * 
@@ -38,6 +39,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private void initComponents() {
+        this.setIconImage(Util.getAboutImage());
         JPanel contentPane = (JPanel) getContentPane();
         contentPane.setLayout(new BorderLayout());
         chatPanel = new ChatPanel(chatter);

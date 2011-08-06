@@ -5,6 +5,8 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +24,6 @@ import java.util.logging.SimpleFormatter;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-import mysterychess.Main;
 import mysterychess.model.Advisor;
 import mysterychess.model.Cannon;
 import mysterychess.model.Chariot;
@@ -45,11 +46,8 @@ import mysterychess.model.Team;
 public class Util {
 
     private final static String VERSION = "2.0";
-    private static final String AUTHOR = "Tin Bui-Huy";
-    private static final String GRAPHICS_DESIGNER = "Huy Khong-Minh";
+    public final static String APPLICATION_NAME = "MysteryChess";
     public final static String RMI_SERVER_NAME = "MysteryChessServer";
-    /** Socket timeout in milliseconds */
-    public final static int CHECK_ALIVE_INTERVAL = 15 * 1000; // 15 seconds
     public static long PIECE_MOVE_EXPIRE_TIME = 2 * 60 * 1000; // 2 minutes
     public static long GAME_EXPIRE_TIME = 20 * 60 * 1000; // 20 minutes
     private final static Map<String, Image> images = new HashMap<String, Image>();
@@ -72,6 +70,8 @@ public class Util {
     public static final Point BLACK_SOLDIER3_DEFAULT_POSITION = new Point(4, 3);
     public static final Point BLACK_SOLDIER4_DEFAULT_POSITION = new Point(6, 3);
     public static final Point BLACK_SOLDIER5_DEFAULT_POSITION = new Point(8, 3);
+    private static final String[] DEVELOPERS = {"Tin Bui Huy", "The Tran Quang", 
+        "Huy Khong Minh", "Linh Do Tran"};
 
     // Init log
     static {
@@ -119,13 +119,9 @@ public class Util {
     public static String getVersion() {
         return VERSION;
     }
-
-    public static String getOriginalAuthor() {
-        return AUTHOR;
-    }
-
-    public static String getGraphicsAuthor() {
-        return GRAPHICS_DESIGNER;
+    
+    public static String[] getDevelopers() {
+        return DEVELOPERS;
     }
 
     public static void showMessageConcurrently(final Component parent, final String msg) {
@@ -157,6 +153,10 @@ public class Util {
 
     public static Image getAboutImage() {
         return loadImage("icon.png");
+    }
+
+    public static String getApplicationName() {
+        return APPLICATION_NAME;
     }
 
     private Util() {
