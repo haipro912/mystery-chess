@@ -152,6 +152,10 @@ public class Util {
     }
 
     public static Image getAboutImage() {
+        return loadImage("about.png");
+    }
+    
+    public static Image getIconImage() {
         return loadImage("icon.png");
     }
 

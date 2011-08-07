@@ -91,7 +91,7 @@ public class StartupFrame extends JFrame {
 
     private void initComponent() throws Exception {
         final PropertiesLoader loader = new PropertiesLoader(Util.APPLICATION_NAME + ".inf");
-        this.setIconImage(Util.getAboutImage());
+        this.setIconImage(Util.getIconImage());
         this.setTitle(Util.getApplicationName() + " - " + Util.getVersion());
         titledBorder1 = new TitledBorder("Server or Client");
         this.getContentPane().setLayout(borderLayout1);
