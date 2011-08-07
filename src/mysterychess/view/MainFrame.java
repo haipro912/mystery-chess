@@ -39,7 +39,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private void initComponents() {
-        this.setIconImage(Util.getAboutImage());
+        this.setIconImage(Util.getIconImage());
         JPanel contentPane = (JPanel) getContentPane();
         contentPane.setLayout(new BorderLayout());
         chatPanel = new ChatPanel(chatter);
